@@ -18,10 +18,15 @@ export default function LoginPage() {
   const { user } = useAuth()
 
   useEffect(() => {
+    console.log("LoginPage useEffect triggered. User:", user);
     if (user) {
-      router.push("/dashboard")
+      console.log("User is truthy, attempting to push to /dashboard");
+      router.push("/dashboard");
+      console.log("Pushed to /dashboard");
+    } else {
+      console.log("User is falsy.");
     }
-  }, [user, router])
+  }, [user, router]);
 
   // Single function for magic link (works for both new and existing users)
   const handleMagicLink = async (e: FormEvent) => {
