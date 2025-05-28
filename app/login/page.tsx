@@ -25,27 +25,30 @@ export default function LoginPage() {
 
   // Single function for magic link (works for both new and existing users)
   const handleMagicLink = async (e: FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage("")
+  e.preventDefault()
+  setLoading(true)
+  setMessage("")
 
-    console.log("Sending magic link to:", email)
+  // Log everything about the current environment
+  console.log("=== DEBUGGING SUPABASE EMAIL ===")
+  console.log("Current URL:", window.location.href)
+  console.log("Origin:", window.location.origin)
+  console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL)
+  
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    // Let's try with NO options at all
+  })
 
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-      // This works for both new and existing users
-    })
-
-    console.log("Magic link response:", { data, error })
-
-    if (error) {
-      console.error("Magic link error:", error)
-      setMessage(error.message)
-    } else {
-      setMessage("Check your email for your secure login link!")
-    }
-    setLoading(false)
+  console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2))
+  
+  if (error) {
+    setMessage(error.message)
+  } else {
+    setMessage("Check your email - and tell me which template you actually received!")
   }
+  setLoading(false)
+}
 
   if (user) {
     return null // Will redirect
