@@ -20,7 +20,13 @@ export default function LoginPage() {
 
   console.log("LoginPage rendered. User:", user);
 
+  // Reset hasRedirected on each render
   useEffect(() => {
+    setHasRedirected(false);
+  }, []); // Empty dependency array means this runs once after the initial render
+
+  useEffect(() => {
+     console.log("LoginPage useEffect (redirect). User:", user, "hasRedirected:", hasRedirected);
     if (user && !hasRedirected) {
       console.log("LoginPage - User truthy, pushing to /dashboard");
       router.push("/dashboard");
@@ -44,6 +50,7 @@ export default function LoginPage() {
     });
 
     console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2));
+    
 
     if (error) {
       setMessage(error.message);
