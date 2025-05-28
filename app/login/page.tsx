@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState } from "react"
-import type { FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
@@ -13,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/contexts/auth-context"
 import { useEffect } from "react"
+import type { FormEvent } from "react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -46,20 +46,28 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleMagicLink = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage("")
 
-    const { error } = await supabase.auth.signUp({
+    console.log("Sending magic link to:", email)
+    console.log("Redirect URL will be:", `https://exquisite-mandazi-d1786f.netlify.app/dashboard`)
+
+    const { data, error } = await supabase.auth.signInWithOtp({
       email,
-      password,
+      options: {
+        emailRedirectTo: "https://exquisite-mandazi-d1786f.netlify.app/dashboard",
+      },
     })
 
+    console.log("Magic link response:", { data, error })
+
     if (error) {
+      console.error("Magic link error:", error)
       setMessage(error.message)
     } else {
-      setMessage("Check your email for the confirmation link!")
+      setMessage("Check your email for the magic link!")
     }
     setLoading(false)
   }
@@ -105,31 +113,21 @@ export default function LoginPage() {
             </TabsContent>
 
             <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
+              <form onSubmit={handleMagicLink} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="magic-email">Email</Label>
                   <Input
-                    id="signup-email"
+                    id="magic-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                  />
-                </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Creating account..." : "Sign Up"}
+                  {loading ? "Sending magic link..." : "Send Magic Link"}
                 </Button>
+                <p className="text-xs text-gray-600 text-center">We'll send you a secure link to sign in instantly</p>
               </form>
             </TabsContent>
           </Tabs>
