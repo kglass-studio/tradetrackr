@@ -22,6 +22,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+   useEffect(() => {
+    supabase.auth.signOut(); // TEMPORARY: Force sign out on load
+    
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
