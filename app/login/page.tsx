@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     console.log("LoginPage useEffect triggered. User:", user);
-    if (user) {
+    if (user && window.location.pathname === "/login") {
       console.log("User is truthy, attempting to push to /dashboard");
       router.push("/dashboard");
       console.log("Pushed to /dashboard");
