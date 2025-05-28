@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
    useEffect(() => {
     supabase.auth.signOut(); // TEMPORARY: Force sign out on load
-    
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -64,4 +64,4 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider")
   }
   return context
-}
+}}
