@@ -18,15 +18,16 @@ export default function LoginPage() {
   const { user } = useAuth()
 
   useEffect(() => {
-    console.log("LoginPage useEffect triggered. User:", user);
     if (user && window.location.pathname === "/login") {
-      console.log("User is truthy, attempting to push to /dashboard");
-      router.push("/dashboard");
-      console.log("Pushed to /dashboard");
+      console.log("LoginPage - User truthy and on /login, setting window.location.href to /dashboard");
+      window.location.href = "/dashboard";
+    } else if (user && window.location.pathname !== "/login") {
+      console.log("LoginPage - User truthy and NOT on /login");
+      // Optionally, you could do something here if you land back on /login unexpectedly
     } else {
-      console.log("User is falsy.");
+      console.log("LoginPage - User falsy");
     }
-  }, [user, router]);
+  }, [user]); // Removed router from dependency array for this test
 
   // Single function for magic link (works for both new and existing users)
   const handleMagicLink = async (e: FormEvent) => {
