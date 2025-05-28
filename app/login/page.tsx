@@ -16,13 +16,14 @@ export default function LoginPage() {
   const [message, setMessage] = useState("")
   const router = useRouter()
   const { user } = useAuth()
+  console.log("LoginPage rendered. User:", user);
 
-  useEffect(() => {
-    if (user) {
-      console.log("LoginPage - User truthy, setting window.location.href to /dashboard");
-      window.location.href = "/dashboard";
-    }
-  }, [user]);// Removed router from dependency array for this test
+  // useEffect(() => {
+  //   if (user) {
+  //     console.log("LoginPage - User truthy, setting window.location.href to /dashboard");
+  //     window.location.href = "/dashboard";
+  //   }
+  // }, [user]);// Removed router from dependency array for this test
 
   // Single function for magic link (works for both new and existing users)
   const handleMagicLink = async (e: FormEvent) => {
