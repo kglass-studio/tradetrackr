@@ -50,9 +50,9 @@ export default function LoginPage() {
   setLoading(false)
 }
 
-  if (user) {
-    return null // Will redirect
-  }
+  // if (user) {
+  //   return null // Will redirect
+  // }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
