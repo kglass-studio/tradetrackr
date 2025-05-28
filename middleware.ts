@@ -8,21 +8,21 @@ export async function middleware(req: NextRequest) {
 
   const {
     data: { session },
-  } = await supabase.auth.getSession()
+  } = await supabase.auth.getSession();
 
-  // If user is not signed in and the current path is not /login, redirect to /login
-  if (!session && req.nextUrl.pathname !== "/login") {
-    return NextResponse.redirect(new URL("/login", req.url))
+  // If user is not signed in and the current path is NOT /login
+  if (!session && !req.nextUrl.pathname.startsWith("/login")) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // If user is signed in and the current path is /login, redirect to /dashboard
-  if (session && req.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(new URL("/dashboard", req.url))
+  // If user is signed in and the current path IS /login
+  if (session && req.nextUrl.pathname.startsWith("/login")) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  return res
+  return res;
 }
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-}
+};
