@@ -51,13 +51,16 @@ export default function LoginPage() {
     setLoading(true)
     setMessage("")
 
+    // Always use production URL - never localhost
+    const redirectUrl = "https://exquisite-mandazi-d1786f.netlify.app/dashboard"
+
     console.log("Sending magic link to:", email)
-    console.log("Redirect URL will be:", `https://exquisite-mandazi-d1786f.netlify.app/dashboard`)
+    console.log("Redirect URL:", redirectUrl)
 
     const { data, error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: "https://exquisite-mandazi-d1786f.netlify.app/dashboard",
+        emailRedirectTo: redirectUrl,
       },
     })
 
