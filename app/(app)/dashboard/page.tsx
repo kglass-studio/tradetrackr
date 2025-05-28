@@ -45,6 +45,7 @@ export default function DashboardPage() {
       setFollowUps(followUpsData || [])
     } catch (error) {
       console.error("Error fetching dashboard data:", error)
+      console.error("Full error object:", error); // Add this line
     } finally {
       setLoading(false)
     }
