@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import type { FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
