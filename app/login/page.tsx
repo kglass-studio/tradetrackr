@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user && !hasRedirected) {
-      console.log("LoginPage - User truthy and not yet redirected, pushing to /dashboard");
+      console.log("LoginPage - User truthy, pushing to /dashboard");
       router.push("/dashboard");
       setHasRedirected(true);
     }
@@ -33,30 +33,25 @@ export default function LoginPage() {
     setLoading(true);
     setMessage("");
 
-  // Log everything about the current environment
-  console.log("=== DEBUGGING SUPABASE EMAIL ===")
-  console.log("Current URL:", window.location.href)
-  console.log("Origin:", window.location.origin)
-  console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL)
-  
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    // Let's try with NO options at all
-  })
+    console.log("=== DEBUGGING SUPABASE EMAIL ===");
+    console.log("Current URL:", window.location.href);
+    console.log("Origin:", window.location.origin);
+    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 
-  console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2))
-  
-  if (error) {
-    setMessage(error.message)
-  } else {
-    setMessage("Check your email - and tell me which template you actually received!")
-  }
-  setLoading(false)
-}
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email,
+      // Let's try with NO options at all
+    });
 
-  // if (user) {
-  //   return null // Will redirect
-  // }
+    console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2));
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Check your email - and tell me which template you actually received!");
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
