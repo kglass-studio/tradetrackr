@@ -14,6 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
+export const dynamic = 'force-dynamic';
+
 export default function NewClientPage() {
   const [formData, setFormData] = useState({
     name: "",
