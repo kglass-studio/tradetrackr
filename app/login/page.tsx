@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     async function handleAuthRedirect() {
-      const auth = supabase.auth as AuthClient; // Cast supabase.auth
+      const auth = supabase.auth as typeof AuthClient; // Use typeof AuthClient
       const { error } = await auth.getSessionFromUrl();
       if (error) {
         console.error("Error getting session from URL:", error);
