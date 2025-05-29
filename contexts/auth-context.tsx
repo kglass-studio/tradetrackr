@@ -1,26 +1,26 @@
 "use client"
 
-import type React from "react"
+import type React, { useRef } from "react"
 
 import { createContext, useContext, useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabase"
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  signOut: () => Promise<void>
+  user: User | null;
+  authLoading: boolean; // Renamed 'loading' to 'authLoading'
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  loading: true,
+  authLoading: true, // Renamed 'loading' to 'authLoading'
   signOut: async () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true); // Renamed 'loading' to 'authLoading'
   const isInitialLoad = useRef(true);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const initialUser = session?.user ?? null;
       setUser(initialUser);
       console.log("Initial user session fetched:", initialUser);
-      setLoading(false);
+      setAuthLoading(false); // Renamed 'setLoading'
       isInitialLoad.current = false;
     };
 
@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(currentUser);
       console.log("Auth state change event. User:", currentUser, "Event:", _event);
       if (!isInitialLoad.current) {
-        setLoading(false); // Only set loading to false after initial load
+        setAuthLoading(false); // Renamed 'setLoading'
       }
     });
 
@@ -50,24 +50,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = async () => {
-    setLoading(true);
+    setAuthLoading(true); // Renamed 'setLoading'
     await supabase.auth.signOut();
     setUser(null);
-    setLoading(false);
+    setAuthLoading(false); // Renamed 'setLoading'
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ user, authLoading, signOut }}> {/* Renamed 'loading' */}
       {children}
     </AuthContext.Provider>
   );
 }
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
-
