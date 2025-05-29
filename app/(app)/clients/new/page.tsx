@@ -103,7 +103,7 @@ export default function NewClientPage() {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="job_status">Job Status</Label>
               <Select value={formData.job_status} onValueChange={(value) => handleChange("job_status", value)}>
                 <SelectTrigger>
@@ -117,7 +117,24 @@ export default function NewClientPage() {
                   <SelectItem value="Paid">Paid</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
+
+             {/* Temporary standard select */}
+        <div className="space-y-2">
+          <Label htmlFor="job_status">Job Status</Label>
+          <select
+            id="job_status"
+            value={formData.job_status}
+            onChange={(e) => handleChange("job_status", e.target.value)}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="Lead">Lead</option>
+            <option value="Quoted">Quoted</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+            <option value="Paid">Paid</option>
+          </select>
+        </div>
 
             <div className="flex gap-4 pt-4">
               <Button type="submit" disabled={loading} className="flex-1">
