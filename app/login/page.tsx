@@ -21,14 +21,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     async function handleAuthRedirect() {
-      const auth = supabase.auth as SupabaseAuthClient; // Cast to SupabaseAuthClient
-      const { error } = await auth.getSessionFromUrl();
+      const auth = supabase as any; // Temporary "any" to see if the build progresses
+      const { error } = await auth.auth.getSessionFromUrl();
       if (error) {
         console.error("Error getting session from URL:", error);
       }
     }
     handleAuthRedirect();
   }, []);
+
   useEffect(() => {
     if (!authLoading && user && !hasRedirected.current) {
       console.log("LoginPage - Auth state loaded, user truthy, setting window.location.href to /dashboard");
