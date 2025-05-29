@@ -12,16 +12,16 @@ export default function AppLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, loading } = useAuth()
+  const { user, authLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!authLoading && !user) {
       router.push("/login")
     }
-  }, [user, loading, router])
+  }, [user, authLoading, router])
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
