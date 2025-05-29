@@ -19,6 +19,7 @@ export default function LoginPage() {
   const hasRedirected = useRef(false);
 
   console.log("LoginPage rendered. User:", user, "hasRedirected:", hasRedirected.current);
+  console.log("LoginPage - Rendering with user:", user);
 
   useEffect(() => {
     if (user && !hasRedirected.current) {
@@ -44,7 +45,6 @@ export default function LoginPage() {
     });
 
     console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2));
-    
 
     if (error) {
       setMessage(error.message);
@@ -53,7 +53,7 @@ export default function LoginPage() {
     }
     setLoading(false);
   };
- console.log("LoginPage - Rendering with user:", user);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
@@ -65,7 +65,16 @@ export default function LoginPage() {
         <CardContent>
           {!user && (
             <form onSubmit={handleMagicLink} className="space-y-4">
-              {/* ... your form ... */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Sending secure link..." : "Send Login Link"}
+              </Button>
+              <p className="text-xs text-gray-600 text-center">
+                We'll send you a secure link to sign in instantly. Works for new and existing accounts.
+              </p>
             </form>
           )}
 
