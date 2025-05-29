@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -18,17 +19,17 @@ export default function LoginPage() {
   const { user, loading: authLoading } = useAuth(); // Also get loading from auth-context
   const hasRedirected = useRef(false);
   const initialLoad = useRef(true);
-  
+
    console.log("LoginPage - Rendered. User:", user, "authLoading:", authLoading);
 
   useEffect(() => {
     async function handleAuthRedirect() {
-      const { error } = await supabase.auth.getSessionFromUrl();
+      const supabaseClient = supabase as SupabaseClient; // Add this line
+      const { error } = await supabaseClient.auth.getSessionFromUrl();
       if (error) {
         console.error("Error getting session from URL:", error);
       }
     }
-
     handleAuthRedirect();
   }, []);
 
