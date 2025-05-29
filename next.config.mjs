@@ -1,18 +1,4 @@
 /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   eslint: {
-//     ignoreDuringBuilds: true,
-//   },
-//   typescript: {
-//     ignoreBuildErrors: true,
-//   },
-//   images: {
-//     unoptimized: true,
-//   },
-// }
-
-// export default nextConfig
-
 const nextConfig = {
   experimental: {
     appDir: true,
@@ -23,11 +9,10 @@ const nextConfig = {
         ...config.resolve.fallback,
         'react-dom/server': import.meta.resolve('react-dom/server'),
       };
+      config.externals = [...(config.externals || []), '@supabase/supabase-js'];
     }
     return config;
   },
-  // Add this:
-  //clientComponents: ['./app/(app)/clients/new/page.tsx'],
 };
 
 export default nextConfig;
