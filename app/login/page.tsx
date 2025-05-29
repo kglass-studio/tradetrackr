@@ -17,9 +17,9 @@ export default function LoginPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth(); // Also get loading from auth-context
   const hasRedirected = useRef(false);
-
-  console.log("LoginPage rendered. User:", user, "hasRedirected:", hasRedirected.current);
-  console.log("LoginPage - Rendering with user:", user);
+  const initialLoad = useRef(true);
+  
+   console.log("LoginPage - Rendered. User:", user, "authLoading:", authLoading);
 
   useEffect(() => {
     async function handleAuthRedirect() {
