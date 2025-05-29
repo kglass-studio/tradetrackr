@@ -34,11 +34,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user && !hasRedirected.current) {
-      console.log("LoginPage - User truthy, pushing to /dashboard");
-      router.push("/dashboard");
+      console.log("LoginPage - Auth state loaded, user truthy, setting window.location.href to /dashboard");
+      window.location.href = "/dashboard";
       hasRedirected.current = true;
     }
-  }, [user, router, hasRedirected, authLoading]);
+  }, [user, authLoading]); // Removed router from dependency array for this test
 
   const handleMagicLink = async (e: FormEvent) => {
     e.preventDefault();
