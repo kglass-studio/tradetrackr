@@ -21,13 +21,13 @@ const nextConfig = {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        'react-dom/server': require.resolve('react-dom/server'),
+        'react-dom/server': import.meta.resolve('react-dom/server'),
       };
     }
     return config;
   },
   // Add this:
-  clientComponents: ['./app/(app)/clients/new/page.tsx'],
+  //clientComponents: ['./app/(app)/clients/new/page.tsx'],
 };
 
 export default nextConfig;
