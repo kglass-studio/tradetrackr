@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
-import { SupabaseClient } from "@supabase/supabase-js"; // Import SupabaseClient
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,8 +21,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     async function handleAuthRedirect() {
-      const client = supabase as SupabaseClient; // Cast the whole client
-      const { error } = await client.auth.getSessionFromUrl();
+      const auth = supabase.auth as any;
+      const { error } = await auth.getSessionFromUrl();
       if (error) {
         console.error("Error getting session from URL:", error);
       }
