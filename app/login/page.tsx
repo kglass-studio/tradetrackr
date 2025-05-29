@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { signOut } = useAuth();
   const passwordInputRef = useRef<HTMLInputElement>(null);
+  const [message, setMessage] = useState(""); // <--- Add this line here
 
   useEffect(() => {
     async function handleAuthRedirect() {
