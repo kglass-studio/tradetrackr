@@ -15,29 +15,35 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Also get loading from auth-context
   const hasRedirected = useRef(false);
 
   console.log("LoginPage rendered. User:", user, "hasRedirected:", hasRedirected.current);
   console.log("LoginPage - Rendering with user:", user);
 
   useEffect(() => {
-    if (user && !hasRedirected.current) {
+    async function handleAuthRedirect() {
+      const { error } = await supabase.auth.getSessionFromUrl();
+      if (error) {
+        console.error("Error getting session from URL:", error);
+      }
+    }
+
+    handleAuthRedirect();
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading && user && !hasRedirected.current) {
       console.log("LoginPage - User truthy, pushing to /dashboard");
       router.push("/dashboard");
       hasRedirected.current = true;
     }
-  }, [user, router]);
+  }, [user, router, hasRedirected, authLoading]);
 
   const handleMagicLink = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-
-    console.log("=== DEBUGGING SUPABASE EMAIL ===");
-    console.log("Current URL:", window.location.href);
-    console.log("Origin:", window.location.origin);
-    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 
     const { data, error } = await supabase.auth.signInWithOtp({
       email,
