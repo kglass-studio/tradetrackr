@@ -9,23 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
-import { AuthClient } from '@supabase/gotrue-js';
-
+import { SupabaseAuthClient } from "@supabase/supabase-js"; // Import this
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth(); // Also get loading from auth-context
-  const hasRedirected = useRef(false);
-  const initialLoad = useRef(true);
-
-   console.log("LoginPage - Rendered. User:", user, "authLoading:", authLoading);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signOut } = useAuth();
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     async function handleAuthRedirect() {
-      const auth = supabase.auth as typeof AuthClient;
+      const auth = supabase.auth as SupabaseAuthClient; // Cast to SupabaseAuthClient
       const { error } = await auth.getSessionFromUrl();
       if (error) {
         console.error("Error getting session from URL:", error);
@@ -33,7 +29,6 @@ export default function LoginPage() {
     }
     handleAuthRedirect();
   }, []);
-
   useEffect(() => {
     if (!authLoading && user && !hasRedirected.current) {
       console.log("LoginPage - Auth state loaded, user truthy, setting window.location.href to /dashboard");
