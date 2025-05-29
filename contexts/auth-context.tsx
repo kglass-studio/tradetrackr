@@ -1,6 +1,7 @@
 "use client"
 
-import type React, { useRef } from "react"
+import type React from "react";
+import { useRef } from "react";
 
 import { createContext, useContext, useEffect, useState } from "react"
 import type { User } from "@supabase/supabase-js"
