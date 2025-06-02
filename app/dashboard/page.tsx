@@ -10,16 +10,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Calendar, Clock, CheckCircle } from "lucide-react"
 import { format, isPast, isToday } from "date-fns"
+import { Suspense } from 'react'
+import WelcomeBanner from '@/components/WelcomeBanner'
 
 export default function DashboardPage() {
   const { user, authLoading, signOut } = useAuth()
   const router = useRouter()
-  //const searchParams = useSearchParams()
   const [clients, setClients] = useState<Client[]>([])
   const [followUps, setFollowUps] = useState<FollowUpWithClient[]>([])
   const [plan, setPlan] = useState("free")
   const [loading, setLoading] = useState(true)
-  //const msg = searchParams.get("msg")
   const hasMounted = useRef(false)
 
   useEffect(() => {
@@ -130,9 +130,9 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      {/* {msg === "welcome" && (
-        <div className="rounded bg-green-100 p-3 text-green-800 font-medium shadow">Welcome back!</div>
-      )} */}
+      <Suspense fallback={null}>
+        <WelcomeBanner />
+      </Suspense>
 
       {plan === "free" && (
         <div className="rounded bg-yellow-100 border border-yellow-300 p-4 shadow text-yellow-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
