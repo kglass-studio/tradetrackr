@@ -27,11 +27,13 @@ export default function SignUpPage() {
     try {
       // Call Supabase signUp method
       const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        // You can add options here, e.g., redirectTo for email confirmation
-        // redirectTo: `${window.location.origin}/auth/callback` // Example for email confirmation
-      });
+  email,
+  password,
+  options: {
+    emailRedirectTo: `${window.location.origin}/login`
+  }
+})
+
 
       if (error) {
         // Display Supabase error message
