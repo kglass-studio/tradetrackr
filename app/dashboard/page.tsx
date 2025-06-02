@@ -13,6 +13,7 @@ import { format, isPast, isToday } from "date-fns"
 import WelcomeBanner from "@/components/WelcomeBanner"
 import { PlanBadge } from "@/components/PlanBadge"
 import { UpgradeButton } from "@/components/UpgradeButton"
+import { fetchUserPlan } from "@/lib/fetch-user-plan";
 
 export default function DashboardPage() {
   const { user, authLoading, signOut } = useAuth()
@@ -71,17 +72,29 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }
+  
 
-  useEffect(() => {
-    if (authLoading || hasMounted.current) return
-    hasMounted.current = true
+ useEffect(() => {
+  const initDashboard = async () => {
     if (!user) {
-      router.push("/login")
-      return
+      router.push("/login");
+      return;
     }
-    fetchDashboardData()
-    fetchUserPlan()
-  }, [authLoading, user])
+
+    await Promise.all([
+      fetchDashboardData(),
+      fetchAndSetUserPlan(user.id)
+    ]);
+
+    setLoading(false);
+  };
+
+  if (!authLoading && !hasMounted.current) {
+    hasMounted.current = true;
+    initDashboard();
+  }
+}, [authLoading, user]);
+
 
   const getFollowUpStatus = (dateStr: string) => {
     const date = new Date(dateStr)

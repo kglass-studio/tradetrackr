@@ -20,10 +20,12 @@ export default function ClientsList() {
   const [planLoaded, setPlanLoaded] = useState(false)
 
 
-  useEffect(() => {
-    if (!user) return
+ useEffect(() => {
+  if (!user || !plan) return // Don’t fetch if no user or plan isn’t loaded
+  let isMounted = true
 
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
       const { data: clientsData } = await supabase
         .from("clients")
         .select("*")
@@ -35,13 +37,22 @@ export default function ClientsList() {
         .eq("status", "pending")
         .order("scheduled_date", { ascending: true }) as unknown as { data: FollowUp[] }
 
-      setClients(clientsData || [])
-      setFollowUps(followUpsData || [])
-      setPlanLoaded(true)
+      if (isMounted) {
+        setClients(clientsData || [])
+        setFollowUps(followUpsData || [])
+        setPlanLoaded(true)
+      }
+    } catch (error) {
+      console.error("Error fetching client data:", error)
     }
+  }
 
-    fetchData()
-  }, [user])
+  fetchData()
+  return () => {
+    isMounted = false
+  }
+}, [user, plan])
+
 
   const getStatus = (date: string) => {
     const parsed = new Date(date)
@@ -79,7 +90,7 @@ export default function ClientsList() {
   }
 
   const statusCounts = getStatusCounts()
-  
+
   if (!user || !planLoaded) {
   return (
     <div className="h-screen flex items-center justify-center">
