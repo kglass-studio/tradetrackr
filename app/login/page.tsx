@@ -23,15 +23,31 @@ export default function LoginPage() {
   if (authLoading || hasRedirected.current) return
 
   if (user) {
+    console.log("🔍 User object:", user)
+    console.log("📧 Confirmed at:", user.email_confirmed_at)
+
     if (user.email_confirmed_at) {
       hasRedirected.current = true
-      console.log("✅ Email confirmed, redirecting to dashboard")
+      console.log("✅ Email confirmed — redirecting to dashboard.")
       router.push("/dashboard")
     } else {
-      console.warn("⚠️ User logged in but email not confirmed.")
+      console.warn("⏳ Email not confirmed yet. Retrying in 2s…")
+
+      setTimeout(() => {
+        supabase.auth.getUser().then(({ data }) => {
+          console.log("🔄 Refreshed user from Supabase:", data.user)
+
+          if (data.user?.email_confirmed_at) {
+            hasRedirected.current = true
+            console.log("✅ Email now confirmed — redirecting to dashboard.")
+            router.push("/dashboard")
+          }
+        })
+      }, 2000)
     }
   }
-}, [authLoading, user, router])
+}, [authLoading, user])
+
 
 
   const handleLogin = async (e: React.FormEvent) => {
