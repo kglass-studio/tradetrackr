@@ -23,27 +23,23 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const hasMounted = useRef(false)
 
-  useEffect(() => {
-    if (authLoading || hasMounted.current) return
-    hasMounted.current = true
+  const fetchUserPlan = async () => {
     if (!user) {
-      router.push("/login")
+      console.warn("No user found when fetching plan")
       return
     }
-    fetchDashboardData()
-    fetchUserPlan()
-  }, [authLoading, user])
 
-  const fetchUserPlan = async () => {
-    if (!user) return
+    console.log("User ID:", user.id)
+
     const { data, error } = await supabase
       .from("profiles")
       .select("plan")
       .eq("id", user.id)
       .single()
 
+    console.log("fetchUserPlan result:", data)
     if (error) {
-      console.error("Failed to fetch user plan:", error)
+      console.error("fetchUserPlan error:", error)
       return
     }
 
@@ -75,6 +71,17 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (authLoading || hasMounted.current) return
+    hasMounted.current = true
+    if (!user) {
+      router.push("/login")
+      return
+    }
+    fetchDashboardData()
+    fetchUserPlan()
+  }, [authLoading, user])
 
   const getFollowUpStatus = (dateStr: string) => {
     const date = new Date(dateStr)
@@ -119,21 +126,13 @@ export default function DashboardPage() {
     Paid: "text-blue-600",
   }
 
-  if (authLoading || loading) {
+  if (authLoading || loading || plan === null) {
     return (
       <div className="h-screen flex items-center justify-center">
         <p className="text-gray-600 text-lg">Loading...</p>
       </div>
     )
   }
-  if (authLoading || loading || plan === null) {
-  return (
-    <div className="h-screen flex items-center justify-center">
-      <p className="text-gray-600 text-lg">Loading...</p>
-    </div>
-  )
-}
-
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
