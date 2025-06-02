@@ -1,73 +1,100 @@
 "use client"
 
-import type React from "react";
-import { useRef } from "react";
-
 import { createContext, useContext, useEffect, useState } from "react"
-import type { User } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
 import { supabase } from "@/lib/supabase"
+import type { Session, User } from "@supabase/supabase-js"
 
-interface AuthContextType {
-  user: User | null;
-  authLoading: boolean; // Renamed 'loading' to 'authLoading'
-  signOut: () => Promise<void>;
+type AuthContextType = {
+  user: User | null
+  session: Session | null
+  authLoading: boolean
+  plan: string | null;
+  signOut: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  authLoading: true, // Renamed 'loading' to 'authLoading'
-  signOut: async () => {},
+  session: null,
+  authLoading: true,
+  plan: "free",
+  signOut: () => {},
 })
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true); // Renamed 'loading' to 'authLoading'
-  const isInitialLoad = useRef(true);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [session, setSession] = useState<Session | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [plan, setPlan] = useState<string | null>(null)
+
+  const router = useRouter()
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const initialUser = session?.user ?? null;
-      setUser(initialUser);
-      console.log("Initial user session fetched:", initialUser);
-      setAuthLoading(false); // Renamed 'setLoading'
-      isInitialLoad.current = false;
-    };
+    const getSession = async () => {
+      const { data: sessionData, error } = await supabase.auth.getSession()
 
-    fetchSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      console.log("Auth state change event. User:", currentUser, "Event:", _event);
-      if (!isInitialLoad.current) {
-        setAuthLoading(false); // Renamed 'setLoading'
+      if (error) {
+        console.error("🔴 Error fetching session:", error.message)
       }
-    });
 
-    return () => subscription.unsubscribe();
-  }, []);
+      setSession(sessionData.session)
+      setUser(sessionData.session?.user ?? null)
+      setAuthLoading(false)
+
+      if (sessionData.session?.user?.id) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("plan")
+          .eq("id", sessionData.session.user.id)
+          .single()
+
+        if (!error && data?.plan) {
+          setPlan(data.plan)
+        } else {
+          setPlan("free")
+        }
+      }
+    }
+
+    getSession()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
 
   const signOut = async () => {
-    setAuthLoading(true); // Renamed 'setLoading'
-    await supabase.auth.signOut();
-    setUser(null);
-    setAuthLoading(false); // Renamed 'setLoading'
-  };
+    await supabase.auth.signOut()
+
+    toast({
+      title: "Signed out",
+      description: "You’ve been signed out. See you soon!",
+      action: (
+        <button
+          onClick={() => router.push("/login")}
+          className="text-sm text-blue-600 hover:underline ml-2"
+        >
+          Log back in
+        </button>
+      ),
+    })
+
+    setTimeout(() => {
+      router.push("/login")
+    }, 1500)
+  }
 
   return (
-    <AuthContext.Provider value={{ user, authLoading, signOut }}> {/* Renamed 'loading' */}
+    <AuthContext.Provider value={{ user, session, authLoading, plan, signOut }}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext)

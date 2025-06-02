@@ -26,7 +26,19 @@ export interface FollowUp {
   status: "pending" | "completed"
   created_at: string
   updated_at: string
+
+  // 👇 This adds optional related client data returned from Supabase
+  clients?: {
+    name: string
+  }
 }
+export interface FollowUpWithClient extends FollowUp {
+  clients?: {
+    name: string
+  }
+}
+
+
 
 export interface ClientWithDetails extends Client {
   job_notes?: JobNote[]

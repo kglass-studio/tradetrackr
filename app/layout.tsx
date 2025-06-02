@@ -1,17 +1,23 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+// app/layout.tsx
 import "./globals.css"
+import { Inter } from "next/font/google"
 import { AuthProvider } from "@/contexts/auth-context"
+import { Toaster } from "@/components/ui/toaster"
+import ServiceWorkerRegister from "@/components/service-worker-register" // ✅ NEW
+import Head from "next/head"
+
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "TradeTrackr - Simple CRM for Contractors",
-  description: "Mobile-first CRM for independent contractors and gig workers",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-    generator: 'v0.dev'
+export const metadata = {
+  title: "SaltCRM",
+  description: "Simple CRM for small service businesses.",
 }
+
+export const viewport = {
+  themeColor: "#2563eb",
+};
+
 
 export default function RootLayout({
   children,
@@ -20,8 +26,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+     <Head>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="icon" href="/icon-192.png" />
+  <title>SaltCRM</title>
+  <meta name="description" content="Simple CRM for small service businesses." />
+</Head>
+
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <Toaster />
+          <ServiceWorkerRegister /> {/* ✅ Render the component here */}
+        </AuthProvider>
       </body>
     </html>
   )

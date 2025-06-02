@@ -87,7 +87,8 @@ export default function ClientDetailPage() {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
         <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
         <div className="h-32 bg-gray-200 rounded animate-pulse"></div>
         <div className="h-48 bg-gray-200 rounded animate-pulse"></div>
@@ -107,7 +108,8 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/clients">

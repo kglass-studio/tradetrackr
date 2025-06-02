@@ -1,92 +1,111 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signOut } = useAuth();
-  const passwordInputRef = useRef<HTMLInputElement>(null);
-  const [message, setMessage] = useState(""); // <--- Add this line here
-
-  useEffect(() => {
-    async function handleAuthRedirect() {
-      const auth = supabase.auth as any;
-      const { error } = await auth.getSessionFromUrl();
-      if (error) {
-        console.error("Error getting session from URL:", error);
-      }
-    }
-    handleAuthRedirect();
-  }, []);
-
+  const [message, setMessage] = useState("");
+  const router = useRouter();
   const { user, authLoading } = useAuth();
-  const hasRedirected = useRef(false); // Initialize hasRedirected here
+  const hasRedirected = useRef(false);
 
+  // ✅ Guard against redirect loop
   useEffect(() => {
-    if (!authLoading && user && !hasRedirected.current) {
-      console.log("LoginPage - Auth state loaded, user truthy, setting window.location.href to /dashboard");
-      window.location.href = "/dashboard";
+    if (authLoading) return;
+    if (user && !hasRedirected.current) {
       hasRedirected.current = true;
+      console.log("✅ Auth complete, redirecting to /dashboard");
+      router.push("/dashboard");
     }
-  }, [user, authLoading]);
+  }, [authLoading, user, router]);
 
-  const handleMagicLink = async (e: FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-      // Let's try with NO options at all
-    });
+    if (!email || !password) {
+      setMessage("Please enter both email and password.");
+      setLoading(false);
+      return;
+    }
 
-    console.log("Full Supabase response:", JSON.stringify({ data, error }, null, 2));
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage("Check your email - and tell me which template you actually received!");
+      setMessage("Login successful! Redirecting...");
     }
+
     setLoading(false);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Checking session…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-blue-600">TradeTrackr</CardTitle>
-          <CardDescription>Simple CRM for contractors</CardDescription>
+          <CardDescription>Log in to your account</CardDescription>
         </CardHeader>
-
         <CardContent>
-          {!user && (
-            <form onSubmit={handleMagicLink} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Sending secure link..." : "Send Login Link"}
-              </Button>
-              <p className="text-xs text-gray-600 text-center">
-                We'll send you a secure link to sign in instantly. Works for new and existing accounts.
-              </p>
-            </form>
-          )}
-
-          {message && <div className="mt-4 text-sm text-center text-green-600">{message}</div>}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging In…" : "Log In"}
+            </Button>
+            {message && (
+              <p className="mt-4 text-sm text-center text-gray-600">{message}</p>
+            )}
+            <p className="text-sm text-center text-gray-600">
+              Don't have an account?{" "}
+              <Link href="/signup" className="text-blue-600 hover:underline">
+                Sign Up
+              </Link>
+            </p>
+          </form>
         </CardContent>
       </Card>
     </div>

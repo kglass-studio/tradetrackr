@@ -103,7 +103,7 @@ export default function EditClientPage() {
 
   if (!client) {
     return (
-      <div className="space-y-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
         <div className="h-32 bg-gray-200 rounded animate-pulse"></div>
       </div>
@@ -111,7 +111,7 @@ export default function EditClientPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href={`/clients/${params.id}`}>
@@ -136,39 +136,24 @@ export default function EditClientPage() {
 
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
-              />
+              <Input id="phone" type="tel" value={formData.phone} onChange={(e) => handleChange("phone", e.target.value)} />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-              />
+              <Input id="email" type="email" value={formData.email} onChange={(e) => handleChange("email", e.target.value)} />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Textarea
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleChange("address", e.target.value)}
-                rows={3}
-              />
+              <Textarea id="address" value={formData.address} onChange={(e) => handleChange("address", e.target.value)} rows={3} />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="job_status">Job Status</Label>
               <Select value={formData.job_status} onValueChange={(value) => handleChange("job_status", value)}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Lead">Lead</SelectItem>
@@ -195,14 +180,13 @@ export default function EditClientPage() {
       </Card>
 
       {/* Delete Section */}
-      <Card className="border-red-200">
+      <Card className="border border-red-200">
         <CardHeader>
           <CardTitle className="text-red-600">Danger Zone</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-600 mb-4">
-            Deleting this client will permanently remove all associated notes and follow-ups. This action cannot be
-            undone.
+            Deleting this client will permanently remove all associated notes and follow-ups. This action cannot be undone.
           </p>
           <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
             <Trash2 className="h-4 w-4 mr-2" />

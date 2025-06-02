@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // No experimental block
+  images: {
+    domains: ["wdiftjkjxkfrmzffnxsa.supabase.co"],
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

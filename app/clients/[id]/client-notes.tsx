@@ -195,10 +195,28 @@ export function ClientNotes({ clientId, onUpdate }: ClientNotesProps) {
                 <p className="text-gray-900 mb-3">{note.note_text}</p>
 
                 {note.photo_url && (
-                  <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                    <Image src={note.photo_url || "/placeholder.svg"} alt="Job photo" fill className="object-cover" />
-                  </div>
-                )}
+  <div className="w-full max-w-xs mx-auto rounded-lg overflow-hidden border bg-muted p-2">
+    <div className="relative w-full h-48">
+      <Image
+        src={note.photo_url}
+        alt="Job photo"
+        fill
+        className="object-contain rounded"
+        onClick={() => window.open(note.photo_url, "_blank")}
+      />
+    </div>
+    <div className="text-center mt-2">
+      <Button
+        variant="link"
+        size="sm"
+        onClick={() => window.open(note.photo_url, "_blank")}
+      >
+        View Full Size
+      </Button>
+    </div>
+  </div>
+)}
+
               </div>
             ))}
           </div>
