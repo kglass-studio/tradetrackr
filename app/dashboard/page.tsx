@@ -130,9 +130,9 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      {msg === "welcome" && (
+      {/* {msg === "welcome" && (
         <div className="rounded bg-green-100 p-3 text-green-800 font-medium shadow">Welcome back!</div>
-      )}
+      )} */}
 
       {plan === "free" && (
         <div className="rounded bg-yellow-100 border border-yellow-300 p-4 shadow text-yellow-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
