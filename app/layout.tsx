@@ -9,9 +9,17 @@ import Head from "next/head"
 
 const inter = Inter({ subsets: ["latin"] })
 
+// app/layout.tsx
+
+
+
+
 export const metadata = {
   title: "SaltCRM",
   description: "Simple CRM for small service businesses.",
+  icons: {
+    icon: "/favicon.ico", // or "/favicon.png" depending on your file
+  },
 }
 
 export const viewport = {
