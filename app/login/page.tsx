@@ -20,11 +20,14 @@ export default function LoginPage() {
   const hasRedirected = useRef(false)
 
   useEffect(() => {
-    if (!authLoading && user && !hasRedirected.current) {
-      hasRedirected.current = true
-      router.push("/dashboard")
-    }
-  }, [authLoading, user, router])
+  if (authLoading) return;
+  if (user && user.email_confirmed_at && !hasRedirected.current) {
+    hasRedirected.current = true;
+    console.log("✅ Email confirmed and user session is ready, redirecting to /dashboard");
+    router.push("/dashboard");
+  }
+}, [authLoading, user, router]);
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
