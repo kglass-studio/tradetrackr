@@ -14,12 +14,12 @@ import { format, isPast, isToday } from "date-fns"
 export default function DashboardPage() {
   const { user, authLoading, signOut } = useAuth()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  //const searchParams = useSearchParams()
   const [clients, setClients] = useState<Client[]>([])
   const [followUps, setFollowUps] = useState<FollowUpWithClient[]>([])
   const [plan, setPlan] = useState("free")
   const [loading, setLoading] = useState(true)
-  const msg = searchParams.get("msg")
+  //const msg = searchParams.get("msg")
   const hasMounted = useRef(false)
 
   useEffect(() => {
@@ -120,9 +120,11 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
+      
       <div className="h-screen flex items-center justify-center">
         <p className="text-gray-600 text-lg">Loading...</p>
       </div>
+      
     )
   }
 
