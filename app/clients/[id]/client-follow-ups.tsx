@@ -11,6 +11,13 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Check, Clock } from "lucide-react"
 import { format, isPast, isToday } from "date-fns"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+
+type FollowUpForm = {
+  next_action: string
+  scheduled_date: Date | null
+}
 
 interface ClientFollowUpsProps {
   clientId: string
@@ -20,10 +27,11 @@ interface ClientFollowUpsProps {
 export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
   const [followUps, setFollowUps] = useState<FollowUp[]>([])
   const [showAddForm, setShowAddForm] = useState(false)
-  const [formData, setFormData] = useState({
-    next_action: "",
-    scheduled_date: "",
-  })
+  const [formData, setFormData] = useState<FollowUpForm>({
+  next_action: "",
+  scheduled_date: null,
+})
+
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -55,13 +63,15 @@ export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
         {
           client_id: clientId,
           next_action: formData.next_action,
-          scheduled_date: formData.scheduled_date,
+          scheduled_date: formData.scheduled_date.toISOString(),
+
         },
       ])
 
       if (error) throw error
 
-      setFormData({ next_action: "", scheduled_date: "" })
+      setFormData({ next_action: "", scheduled_date: null })
+
       setShowAddForm(false)
       fetchFollowUps()
       onUpdate()
@@ -148,19 +158,22 @@ export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
 
   <div className="space-y-2">
     <Label htmlFor="scheduled_date">Scheduled Date & Time</Label>
-    <Input
-      id="scheduled_date"
-      type="datetime-local"
-      title="Tap to pick a date and time"
-      value={formData.scheduled_date}
-      onChange={(e) => {
-        // Force local time to UTC to prevent mobile 'time shift'
-        const local = new Date(e.target.value)
-        const utc = new Date(local.getTime() - local.getTimezoneOffset() * 60000).toISOString()
-        setFormData((prev) => ({ ...prev, scheduled_date: utc }))
-      }}
-      required
-    />
+    <DatePicker
+  id="scheduled_date"
+  selected={formData.scheduled_date}
+ onChange={(date: Date | null, _event: React.SyntheticEvent<any> | undefined) => {
+  if (date) {
+    setFormData((prev) => ({ ...prev, scheduled_date: date }))
+  }
+}}
+
+  showTimeSelect
+  timeFormat="hh:mm aa"
+  timeIntervals={15}
+  dateFormat="MMMM d, yyyy h:mm aa"
+  className="w-full border rounded px-3 py-2 text-sm"
+/>
+
   </div>
 
   <div className="flex gap-2">
@@ -174,7 +187,8 @@ export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
       size="sm"
       onClick={() => {
         setShowAddForm(false)
-        setFormData({ next_action: "", scheduled_date: "" })
+        setFormData({ next_action: "", scheduled_date: null })
+
       }}
     >
       Cancel
