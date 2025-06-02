@@ -39,7 +39,7 @@ const Footer = () => {
         </div>
         {/* Copyright Section - Spanning all columns */}
         <div className="md:col-span-4 lg:col-span-4 mt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} TradeTrackr. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} SaltCRM. All rights reserved.</p>
         </div>
       </div>
     </footer>

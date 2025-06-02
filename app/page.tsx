@@ -26,7 +26,7 @@ export default function HomePage() {
     <div>
       <div className="flex flex-col items-start justify-center py-16 md:py-24 max-w-7xl mx-auto pl-4 md:pl-8 lg:pl-12">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight md:text-left mb-2">
-          <span className="font-black italic text-blue-500 block text-5xl md:text-6xl -ml-1">TradeTrackr</span>
+          <span className="font-black italic text-blue-500 block text-5xl md:text-6xl -ml-1">SaltCRM</span>
           <span className="block text-2xl md:text-3xl">Manage Your Contracting</span>
           <span className="block text-black text-2xl md:text-3xl">Business Effortlessly</span>
         </h1>

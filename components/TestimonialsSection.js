@@ -7,7 +7,7 @@ const TestimonialsSection = () => {
             Trusted by contractors everywhere
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-xl leading-7 text-gray-500">
-            See what other contractors are saying about TradeTrackr
+            See what other contractors are saying about SaltCRM
           </p>
         </div>
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
