@@ -169,7 +169,7 @@ export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
 
   showTimeSelect
   timeFormat="hh:mm aa"
-  timeIntervals={15}
+  timeIntervals={10}
   dateFormat="MMMM d, yyyy h:mm aa"
   className="w-full border rounded px-3 py-2 text-sm"
 />
