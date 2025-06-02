@@ -135,45 +135,53 @@ export function ClientFollowUps({ clientId, onUpdate }: ClientFollowUpsProps) {
         {/* Add Follow-up Form */}
         {showAddForm && (
           <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg bg-gray-50">
-            <div className="space-y-2">
-              <Label htmlFor="next_action">Next Action</Label>
-              <Input
-                id="next_action"
-                placeholder="e.g., Call to confirm appointment"
-                value={formData.next_action}
-                onChange={(e) => setFormData((prev) => ({ ...prev, next_action: e.target.value }))}
-                required
-              />
-            </div>
+  <div className="space-y-2">
+    <Label htmlFor="next_action">Next Action</Label>
+    <Input
+      id="next_action"
+      placeholder="e.g., Call to confirm appointment"
+      value={formData.next_action}
+      onChange={(e) => setFormData((prev) => ({ ...prev, next_action: e.target.value }))}
+      required
+    />
+  </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="scheduled_date">Scheduled Date & Time</Label>
-              <Input
-                id="scheduled_date"
-                type="datetime-local"
-                value={formData.scheduled_date}
-                onChange={(e) => setFormData((prev) => ({ ...prev, scheduled_date: e.target.value }))}
-                required
-              />
-            </div>
+  <div className="space-y-2">
+    <Label htmlFor="scheduled_date">Scheduled Date & Time</Label>
+    <Input
+      id="scheduled_date"
+      type="datetime-local"
+      title="Tap to pick a date and time"
+      value={formData.scheduled_date}
+      onChange={(e) => {
+        // Force local time to UTC to prevent mobile 'time shift'
+        const local = new Date(e.target.value)
+        const utc = new Date(local.getTime() - local.getTimezoneOffset() * 60000).toISOString()
+        setFormData((prev) => ({ ...prev, scheduled_date: utc }))
+      }}
+      required
+    />
+  </div>
 
-            <div className="flex gap-2">
-              <Button type="submit" disabled={loading} size="sm">
-                {loading ? "Adding..." : "Add Follow-up"}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setShowAddForm(false)
-                  setFormData({ next_action: "", scheduled_date: "" })
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
+  <div className="flex gap-2">
+    <Button type="submit" disabled={loading} size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+      <Check className="h-4 w-4 mr-1" />
+      {loading ? "Saving..." : "Confirm"}
+    </Button>
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      onClick={() => {
+        setShowAddForm(false)
+        setFormData({ next_action: "", scheduled_date: "" })
+      }}
+    >
+      Cancel
+    </Button>
+  </div>
+</form>
+
         )}
 
         {/* Follow-ups List */}
