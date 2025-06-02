@@ -10,6 +10,8 @@ import { format, isPast, isToday } from "date-fns"
 import { Users, Calendar, Clock, CheckCircle } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import InstallAppButton from "@/components/install-app-button"
+import { PlanBadge } from "@/components/PlanBadge"
+import { UpgradeButton } from "@/components/UpgradeButton"
 
 export default function ClientsList() {
   const [clients, setClients] = useState<Client[]>([])
@@ -83,15 +85,7 @@ export default function ClientsList() {
             <p className="font-semibold">You’re on the Free Plan</p>
             <p className="text-sm">Upgrade to unlock unlimited clients and PWA access.</p>
           </div>
-          <a
-            href="https://payhip.com/order?link=aOYT4&pricing_plan=Q9zO4L0VBx"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-              Upgrade to Pro
-            </Button>
-          </a>
+          <UpgradeButton />
         </div>
       )}
 
@@ -107,23 +101,26 @@ export default function ClientsList() {
           <Button variant="ghost" size="sm" onClick={() => signOut()}>
             Logout
           </Button>
+          <UpgradeButton />
         </div>
 
         {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
-  <Link href="/clients/new">
-    <Button>Add Client</Button>
-  </Link>
-) : (
-  <Button disabled title="Free plan allows up to 5 clients only.">
-    Add Client (Limit Reached)
-  </Button>
-)}
-
+          <Link href="/clients/new">
+            <Button>Add Client</Button>
+          </Link>
+        ) : (
+          <Button disabled title="Free plan allows up to 5 clients only.">
+            Add Client (Limit Reached)
+          </Button>
+        )}
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Job Status Summary</CardTitle>
+          <CardTitle className="flex items-center">
+            Job Status Summary
+            <PlanBadge />
+          </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {Object.entries(statusCounts).map(([status, count]) => {
@@ -142,7 +139,10 @@ export default function ClientsList() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Clients</CardTitle>
+          <CardTitle className="flex items-center">
+            Clients
+            <PlanBadge />
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {clients.map(client => {

@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useRef, useState, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/contexts/auth-context"
@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Calendar, Clock, CheckCircle } from "lucide-react"
 import { format, isPast, isToday } from "date-fns"
-import { Suspense } from 'react'
-import WelcomeBanner from '@/components/WelcomeBanner'
+import WelcomeBanner from "@/components/WelcomeBanner"
+import { PlanBadge } from "@/components/PlanBadge"
+import { UpgradeButton } from "@/components/UpgradeButton"
 
 export default function DashboardPage() {
   const { user, authLoading, signOut } = useAuth()
@@ -120,11 +121,9 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      
       <div className="h-screen flex items-center justify-center">
         <p className="text-gray-600 text-lg">Loading...</p>
       </div>
-      
     )
   }
 
@@ -142,30 +141,28 @@ export default function DashboardPage() {
               Upgrade to SaltCRM Pro for unlimited clients and advanced features.
             </p>
           </div>
-          <a
-            href="https://payhip.com/order?link=aOYT4&pricing_plan=Q9zO4L0VBx"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-              Upgrade to Pro
-            </Button>
-          </a>
+          <UpgradeButton />
         </div>
       )}
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <div className="flex flex-col sm:flex-row gap-2">
-          {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
-  <Link href="/clients/new">
-    <Button>Add Client</Button>
-  </Link>
-) : (
-  <Button disabled title="Free plan allows up to 5 clients only.">
-    Add Client (Limit Reached)
-  </Button>
-)}
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+          Dashboard <PlanBadge />
+        </h1>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/clients/new">
+            {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
+              <Button>Add Client</Button>
+            ) : (
+              <Button disabled title="Free plan allows up to 5 clients only.">
+                Add Client (Limit Reached)
+              </Button>
+            )}
+          </Link>
+          <UpgradeButton />
+          <Button variant="ghost" size="sm" onClick={() => signOut()}>
+            Logout
+          </Button>
         </div>
       </div>
 
@@ -208,7 +205,8 @@ export default function DashboardPage() {
                   <div>
                     <p className="font-medium">{fup.next_action}</p>
                     <p className="text-sm text-gray-700">
-                      {fup.clients?.name} • {format(new Date(fup.scheduled_date), "MMM d, yyyy h:mm a")} ({status})
+                      {fup.clients?.name} •{" "}
+                      {format(new Date(fup.scheduled_date), "MMM d, yyyy h:mm a")} ({status})
                     </p>
                   </div>
                   <Link href={`/clients/${fup.client_id}`}>View</Link>
