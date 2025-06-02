@@ -20,13 +20,18 @@ export default function LoginPage() {
   const hasRedirected = useRef(false)
 
   useEffect(() => {
-  if (authLoading) return;
-  if (user && user.email_confirmed_at && !hasRedirected.current) {
-    hasRedirected.current = true;
-    console.log("✅ Email confirmed and user session is ready, redirecting to /dashboard");
-    router.push("/dashboard");
+  if (authLoading || hasRedirected.current) return
+
+  if (user) {
+    if (user.email_confirmed_at) {
+      hasRedirected.current = true
+      console.log("✅ Email confirmed, redirecting to dashboard")
+      router.push("/dashboard")
+    } else {
+      console.warn("⚠️ User logged in but email not confirmed.")
+    }
   }
-}, [authLoading, user, router]);
+}, [authLoading, user, router])
 
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -53,7 +58,13 @@ export default function LoginPage() {
     )
   }
 
-  if (user) return null
+  if (user && !hasRedirected.current) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <p className="text-gray-600 text-lg">Redirecting to dashboard…</p>
+    </div>
+  )
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
