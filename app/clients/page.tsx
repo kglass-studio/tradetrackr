@@ -109,8 +109,7 @@ export default function ClientsList() {
           </Button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2">
-          {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
+        {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
   <Link href="/clients/new">
     <Button>Add Client</Button>
   </Link>
