@@ -13,7 +13,6 @@ import { format, isPast, isToday } from "date-fns"
 import WelcomeBanner from "@/components/WelcomeBanner"
 import { PlanBadge } from "@/components/PlanBadge"
 import { UpgradeButton } from "@/components/UpgradeButton"
-import { fetchUserPlan } from "@/lib/fetch-user-plan";
 
 export default function DashboardPage() {
   const { user, authLoading, signOut } = useAuth()
@@ -24,28 +23,32 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const hasMounted = useRef(false)
 
-  const fetchUserPlan = async () => {
-    if (!user) {
-      console.warn("No user found when fetching plan")
-      return
-    }
-
-    console.log("User ID:", user.id)
-
+  async function fetchUserPlan(userId: string) {
     const { data, error } = await supabase
       .from("profiles")
       .select("plan")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single()
 
-    console.log("fetchUserPlan result:", data)
     if (error) {
-      console.error("fetchUserPlan error:", error)
+      console.error("Error fetching plan:", error.message)
+      setPlan("free")
       return
     }
 
     setPlan(data?.plan || "free")
   }
+
+  useEffect(() => {
+    if (authLoading || hasMounted.current) return
+    hasMounted.current = true
+    if (!user) {
+      router.push("/login")
+      return
+    }
+    fetchDashboardData()
+    fetchUserPlan(user.id)
+  }, [authLoading, user])
 
   const fetchDashboardData = async () => {
     try {
@@ -72,29 +75,6 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }
-  
-
- useEffect(() => {
-  const initDashboard = async () => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
-    await Promise.all([
-      fetchDashboardData(),
-      fetchAndSetUserPlan(user.id)
-    ]);
-
-    setLoading(false);
-  };
-
-  if (!authLoading && !hasMounted.current) {
-    hasMounted.current = true;
-    initDashboard();
-  }
-}, [authLoading, user]);
-
 
   const getFollowUpStatus = (dateStr: string) => {
     const date = new Date(dateStr)
