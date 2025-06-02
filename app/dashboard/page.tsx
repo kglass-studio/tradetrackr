@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [clients, setClients] = useState<Client[]>([])
   const [followUps, setFollowUps] = useState<FollowUpWithClient[]>([])
-  const [plan, setPlan] = useState("free")
+  const [plan, setPlan] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const hasMounted = useRef(false)
 
@@ -126,6 +126,14 @@ export default function DashboardPage() {
       </div>
     )
   }
+  if (authLoading || loading || plan === null) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <p className="text-gray-600 text-lg">Loading...</p>
+    </div>
+  )
+}
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">

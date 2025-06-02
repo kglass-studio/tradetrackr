@@ -17,6 +17,8 @@ export default function ClientsList() {
   const [clients, setClients] = useState<Client[]>([])
   const [followUps, setFollowUps] = useState<FollowUp[]>([])
   const { signOut, user, plan } = useAuth()
+  const [planLoaded, setPlanLoaded] = useState(false)
+
 
   useEffect(() => {
     if (!user) return
@@ -35,6 +37,7 @@ export default function ClientsList() {
 
       setClients(clientsData || [])
       setFollowUps(followUpsData || [])
+      setPlanLoaded(true)
     }
 
     fetchData()
@@ -76,6 +79,15 @@ export default function ClientsList() {
   }
 
   const statusCounts = getStatusCounts()
+  
+  if (!user || !planLoaded) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <p className="text-gray-600 text-lg">Loading...</p>
+    </div>
+  )
+}
+
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 space-y-4">
