@@ -4,7 +4,7 @@ import React from 'react';
 import PricingTable from '@/components/PricingTable';
 import FeaturesSection from '@/components/FeaturesSection';
 import CallToAction from '@/components/CallToAction';
-import Footer from '@/components/Footer';
+//import Footer from '@/components/Footer';
 import SecondaryHero from '@/components/SecondaryHero';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation'; // Import useRouter
@@ -60,7 +60,7 @@ export default function HomePage() {
       </div>
       {/* Call To Action Section */}
       <CallToAction />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

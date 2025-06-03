@@ -5,6 +5,8 @@ import { AuthProvider } from "@/contexts/auth-context"
 import { Toaster } from "@/components/ui/toaster"
 import ServiceWorkerRegister from "@/components/service-worker-register" // ✅ NEW
 import Head from "next/head"
+import Footer from "@/components/footer";
+
 
 
 const inter = Inter({ subsets: ["latin"] })
@@ -34,19 +36,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-     <Head>
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#2563eb" />
-  <link rel="icon" href="/icon-192.png" />
-  <title>SaltCRM</title>
-  <meta name="description" content="Simple CRM for small service businesses." />
-</Head>
+      <Head>
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#2563eb" />
+        <link rel="icon" href="/icon-192.png" />
+        <title>SaltCRM</title>
+        <meta name="description" content="Simple CRM for small service businesses." />
+      </Head>
 
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
         <AuthProvider>
-          {children}
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
           <Toaster />
-          <ServiceWorkerRegister /> {/* ✅ Render the component here */}
+          <ServiceWorkerRegister />
         </AuthProvider>
       </body>
     </html>
