@@ -60,7 +60,7 @@ export default function HomePage() {
       </div>
       {/* Call To Action Section */}
       <CallToAction />
-      {/* <Footer /> */}
+    
     </div>
   );
 }
