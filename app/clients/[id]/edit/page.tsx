@@ -88,7 +88,8 @@ export default function EditClientPage() {
 
       if (error) throw error
 
-      router.push("/clients")
+       // 🔁 Hard reload to avoid production hang
+    window.location.href = "/clients";
     } catch (error) {
       console.error("Error deleting client:", error)
       alert("Error deleting client. Please try again.")
