@@ -159,6 +159,11 @@ export default function DashboardPage() {
               </Button>
             )}
           </Link>
+          <Link href="/account" className="text-sm  hover:underline ml-4">
+          <Button variant="ghost" size="sm">
+          Account
+          </Button>
+          </Link>
           <UpgradeButton />
           <Button variant="ghost" size="sm" onClick={() => signOut()}>
             Logout
