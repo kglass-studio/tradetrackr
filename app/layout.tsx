@@ -5,7 +5,8 @@ import { AuthProvider } from "@/contexts/auth-context"
 import { Toaster } from "@/components/ui/toaster"
 import ServiceWorkerRegister from "@/components/service-worker-register" // ✅ NEW
 import Head from "next/head"
-import Footer from "@/components/footer";
+import Footer from "@/components/footer"
+import SiteHeader from "@/components/site-header"
 
 
 
@@ -46,7 +47,8 @@ export default function RootLayout({
 
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <AuthProvider>
-          <main className="flex-grow">
+          <SiteHeader />
+          <main className="flex-grow pt-16">
             {children}
           </main>
           <Footer />

@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase"; // or wherever your supabase.ts lives
-
+import { UpgradeButton } from "@/components/UpgradeButton"
 
 
 const AccountPage = () => {
@@ -148,17 +148,20 @@ if (error) {
               Current Plan: <strong>{plan === "pro" ? "Pro" : "Free"}</strong>
             </p>
             {plan === "free" ? (
-              <Link href="https://payhip.com/b/your-link" target="_blank">
-                <Button className="mt-2">Upgrade to Pro</Button>
-              </Link>
+              
+                <UpgradeButton />
+              
             ) : (
+              <>
               <Button variant="destructive" className="mt-2">
                 Downgrade to Free
               </Button>
+              <p className="text-sm text-red-600 mt-2">
+      <strong>Note:</strong> Downgrading will permanently delete all clients beyond the free plan’s 5-client limit.
+    </p>
+  </>
             )}
-            <p className="mt-1 text-sm text-gray-600">
-                WARNING: this will delete all clients created past the initial 5 client limit.
-            </p>
+            
           </div>
 
           <div>

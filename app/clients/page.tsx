@@ -117,19 +117,19 @@ export default function ClientsList() {
       <div className="flex justify-between items-center mb-6">
         <div className="flex gap-2">
           <Link href="/dashboard">
-            <Button variant="outline" size="sm">
+            {/* <Button variant="outline" size="sm">
               ← Back to Dashboard
-            </Button>
+            </Button> */}
           </Link>
-          <Button variant="ghost" size="sm" onClick={() => signOut()}>
+          {/* <Button variant="ghost" size="sm" onClick={() => signOut()}>
             Logout
-          </Button>
-          <UpgradeButton />
+          </Button> */}
+          
         </div>
 
         {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
           <Link href="/clients/new">
-            <Button>Add Client</Button>
+            <Button className="bg-blue-500 hover:bg-blue-600">Add Client</Button>
           </Link>
         ) : (
           <Button disabled title="Free plan allows up to 5 clients only.">

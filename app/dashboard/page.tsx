@@ -147,12 +147,12 @@ export default function DashboardPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-          Dashboard <PlanBadge />
+          Dashboard 
         </h1>
         <div className="flex flex-wrap gap-2">
           <Link href="/clients/new">
             {plan === "pro" || clients.filter(c => c.user_id === user?.id).length < 5 ? (
-              <Button>Add Client</Button>
+              <Button className="bg-blue-500 hover:bg-blue-600">Add Client</Button>
             ) : (
               <Button disabled title="Free plan allows up to 5 clients only.">
                 Add Client (Limit Reached)
@@ -160,14 +160,14 @@ export default function DashboardPage() {
             )}
           </Link>
           <Link href="/account" className="text-sm  hover:underline ml-4">
-          <Button variant="ghost" size="sm">
+          {/* <Button variant="ghost" size="sm">
           Account
-          </Button>
+          </Button> */}
           </Link>
-          <UpgradeButton />
-          <Button variant="ghost" size="sm" onClick={() => signOut()}>
+          {/* <UpgradeButton /> */}
+          {/* <Button variant="ghost" size="sm" onClick={() => signOut()}>
             Logout
-          </Button>
+          </Button> */}
         </div>
       </div>
 
