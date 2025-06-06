@@ -15,7 +15,13 @@ const SiteHeader = () => {
         {/* Logo + App Name */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/saltcrm-logo.png" alt="SaltCRM Logo" width={100} height={100} />
+            <img
+  src="/saltcrm-logo.png"
+  alt="SaltCRM Logo"
+  width="100"
+  height="100"
+/>
+
             {/* <span className="text-xl font-bold text-gray-800">SaltCRM</span> */}
           </Link>
           {user && plan && <PlanBadge />}

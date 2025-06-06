@@ -84,14 +84,14 @@ const SecondaryHero = () => {
           <div>
             {/* Rounded square image placeholder */}
            <div className="flex items-center justify-center">
-  <Image
-    src="/screenshot.png"
-    alt="SaltCRM dashboard screenshot"
-    width={1200}
-    height={700}
-    className="rounded-xl shadow-xl max-w-full h-auto"
-    priority
-  />
+ <img
+  src="/screenshot.png"
+  alt="SaltCRM dashboard screenshot"
+  width="1200"
+  height="700"
+  className="rounded-xl shadow-xl max-w-full h-auto"
+/>
+
 </div>
           </div>
         </div>
