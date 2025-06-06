@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase"; // or wherever your supabase.ts lives
 import { UpgradeButton } from "@/components/UpgradeButton"
+import { toast } from "@/components/ui/use-toast";
 
 
 const AccountPage = () => {
@@ -135,6 +136,18 @@ if (error) {
   }
 };
 
+const handleDowngradeClick = () => {
+  toast({
+    title: "Redirecting to Payhip...",
+    description: "After you cancel your subscription, your plan will be downgraded automatically.",
+  });
+
+  // Optional: slight delay before redirect to give toast a chance to show
+  setTimeout(() => {
+    window.location.href = "https://payhip.com/b/aOYT4/manage";
+  }, 1500); // Adjust delay if needed
+};
+
 
   return (
     <div className="flex flex-col min-h-screen text-gray-800">
@@ -153,9 +166,15 @@ if (error) {
               
             ) : (
               <>
-              <Button variant="destructive" className="mt-2">
-                Downgrade to Free
+              <Button
+                variant="destructive"
+                className="mt-2"
+                onClick={handleDowngradeClick}
+              >
+                   Downgrade to Free
               </Button>
+
+
               <p className="text-sm text-red-600 mt-2">
       <strong>Note:</strong> Downgrading will permanently delete all clients beyond the free plan’s 5-client limit.
     </p>
