@@ -7,6 +7,7 @@ import {
   BellIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
+import Image from "next/image";
 
 const SecondaryHero = () => {
   return (
@@ -82,10 +83,15 @@ const SecondaryHero = () => {
           </div>
           <div>
             {/* Rounded square image placeholder */}
-           <div className="bg-gray-200 rounded-xl aspect-w-1 aspect-h-1 min-h-96 shadow-lg flex items-center justify-center">
-  <div className="text-gray-400">
-    App Screenshot
-  </div>
+           <div className="flex items-center justify-center">
+  <Image
+    src="/screenshot.png"
+    alt="SaltCRM dashboard screenshot"
+    width={1200}
+    height={700}
+    className="rounded-xl shadow-xl max-w-full h-auto"
+    priority
+  />
 </div>
           </div>
         </div>
